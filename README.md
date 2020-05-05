@@ -4,34 +4,6 @@ It's a simple class for create *JSON* configurations files Minecraft.
 
 ### Installation
 
-**Maven**
-```xml
-<repositories>
-  <repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io</url>
-  </repository>
-</repositories>
-
-<dependency>
-  <groupId>fr.elixorzz</groupId>
-  <artifactId>SmartConfiguration</artifactId>
-  <version>1.0</version>
-  <scope>compile</scope>
-</dependency> 
-```
-
-**Gradle**
-```groovy
-repositories {
-  maven { url 'https://jitpack.io' }
-}
-
-dependencies {
-  compileOnly group: 'fr.elixorzz', name: 'SmartConfiguration', version: '1.0'
-}
-```
-
 **Manual**
 
 Copy `SmartConfiguration.java` in your Plugin.
