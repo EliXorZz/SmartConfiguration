@@ -34,8 +34,8 @@ public class ConfigurationExample extends SmartConfiguration<ConfigurationExampl
     private String mapName;
     private List<String> questList;
 
-    public ConfigurationPVP() {
-        super("config.json", ConfigurationPVP.class);
+    public ConfigurationExample() {
+        super("config.json", ConfigurationExample.class);
         this.pvpMode = true;
         this.mapName = "default-world";
         this.questList = new ArrayList<>();
