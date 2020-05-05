@@ -29,7 +29,7 @@ In constructor initialize default values when *JSON* file is created.
 Use `update(this)` method in setters for automatically update *JSON* file. 
 
 ```java
-public class ConfigurationExample extends SmartConfiguration<ConfigurationPVP>{
+public class ConfigurationExample extends SmartConfiguration<ConfigurationExample>{
     private boolean pvpMode;
     private String mapName;
     private List<String> questList;
