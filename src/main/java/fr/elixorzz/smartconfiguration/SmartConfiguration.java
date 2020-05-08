@@ -2,6 +2,7 @@ package fr.elixorzz.smartconfiguration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public abstract class SmartConfiguration<T> {
 
     public SmartConfiguration(String name, Class<T> configClass) {
         if (plugin == null)
-            plugin.getLogger().log(Level.SEVERE, "[SmartConfiguration] Please register SmartConfiguration");
+            Bukkit.getLogger().log(Level.SEVERE, "[SmartConfiguration] Please register SmartConfiguration");
 
         this.name = name;
         this.configClass = configClass;
