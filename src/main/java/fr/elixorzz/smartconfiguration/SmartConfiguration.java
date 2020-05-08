@@ -26,14 +26,16 @@ public abstract class SmartConfiguration<T> {
     private transient Class<T> configClass;
 
     public SmartConfiguration(String name, Class<T> configClass) {
-        if (plugin == null)
-            Bukkit.getLogger().log(Level.SEVERE, "[SmartConfiguration] Please register SmartConfiguration");
-
         this.name = name;
         this.configClass = configClass;
     }
 
     public T load() {
+        if (plugin == null) {
+            Bukkit.getLogger().log(Level.SEVERE, "[SmartConfiguration] Please register SmartConfiguration");
+            return null;
+        }
+
         File file = new File(plugin.getDataFolder(), name);
         plugin.getLogger().log(Level.INFO, "[SmartConfiguration] " + name + " is loading ...");
 
