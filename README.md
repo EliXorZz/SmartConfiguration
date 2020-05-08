@@ -4,34 +4,6 @@ It's a simple class for create *JSON* configurations files Minecraft.
 
 ### Installation
 
-**Maven**
-```xml
-<repositories>
-  <repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io</url>
-  </repository>
-</repositories>
-
-<dependency>
-  <groupId>fr.elixorzz</groupId>
-  <artifactId>SmartConfiguration</artifactId>
-  <version>1.0</version>
-  <scope>compile</scope>
-</dependency> 
-```
-
-**Gradle**
-```groovy
-repositories {
-  maven { url 'https://jitpack.io' }
-}
-
-dependencies {
-  compileOnly group: 'fr.elixorzz', name: 'SmartConfiguration', version: '1.0'
-}
-```
-
 **Manual**
 
 Copy `SmartConfiguration.java` in your Plugin.
@@ -57,13 +29,13 @@ In constructor initialize default values when *JSON* file is created.
 Use `update(this)` method in setters for automatically update *JSON* file. 
 
 ```java
-public class ConfigurationExample extends SmartConfiguration<ConfigurationPVP>{
+public class ConfigurationExample extends SmartConfiguration<ConfigurationExample>{
     private boolean pvpMode;
     private String mapName;
     private List<String> questList;
 
-    public ConfigurationPVP() {
-        super("config.json", ConfigurationPVP.class);
+    public ConfigurationExample() {
+        super("config.json", ConfigurationExample.class);
         this.pvpMode = true;
         this.mapName = "default-world";
         this.questList = new ArrayList<>();
