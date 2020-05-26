@@ -1,5 +1,5 @@
 # SmartConfiguration
-It's a simple class for create *JSON* configurations files Minecraft.
+It's a simple class for creating *JSON* configurations files Minecraft.
 ## How to use
 
 ### Installation
