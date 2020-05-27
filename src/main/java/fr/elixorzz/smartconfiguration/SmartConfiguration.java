@@ -5,12 +5,9 @@ import com.google.gson.GsonBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.logging.Level;
 
 /**
@@ -24,10 +21,17 @@ public abstract class SmartConfiguration<T> {
 
     private transient String name;
     private transient Class<T> configClass;
+    private transient Path configPath;
+    private transient Path filePath;
 
     public SmartConfiguration(String name, Class<T> configClass) {
         this.name = name;
         this.configClass = configClass;
+
+        if (plugin != null) {
+            this.configPath = plugin.getDataFolder().toPath();
+            this.filePath = Paths.get(plugin.getDataFolder() + "/" + name);
+        }
     }
 
     public T load() {
@@ -36,31 +40,32 @@ public abstract class SmartConfiguration<T> {
             return null;
         }
 
-        File file = new File(plugin.getDataFolder(), name);
         plugin.getLogger().log(Level.INFO, "[SmartConfiguration] " + name + " is loading ...");
 
-        if (!file.exists()) {
-            try {
-                T config = configClass.newInstance();
-                try {
-                    plugin.getDataFolder().mkdir();
-                    Files.write(file.toPath(), gson.toJson(config).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-                    plugin.getLogger().log(Level.INFO, "[SmartConfiguration] " + name + " was created.");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-
         try {
-            T json = gson.fromJson(new FileReader(file), configClass);
-            plugin.getLogger().log(Level.INFO, "[SmartConfiguration] " + name + " was loaded correctly.");
-            return json;
-        } catch (FileNotFoundException e) {
+            if (!Files.exists(configPath)) {
+                Files.createDirectories(configPath);
+            }
+
+            if (!Files.exists(filePath)) {
+                T config = configClass.newInstance();
+
+                Files.createFile(filePath);
+                Files.write(filePath, gson.toJson(config).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+                plugin.getLogger().log(Level.INFO, "[SmartConfiguration] " + name + " was created.");
+            }
+
+            if (filePath.toFile().length() == 0) {
+                T config = configClass.newInstance();
+                Files.write(filePath, gson.toJson(config).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            }
+
+            try(FileReader reader = new FileReader(filePath.toFile())) {
+                T json = gson.fromJson(reader, configClass);
+                plugin.getLogger().log(Level.INFO, "[SmartConfiguration] " + name + " was loaded correctly.");
+                return json;
+            }
+        } catch (IllegalAccessException | InstantiationException | IOException e) {
             e.printStackTrace();
         }
 
@@ -69,9 +74,8 @@ public abstract class SmartConfiguration<T> {
 
     protected void update(T config) {
         try {
-            File file = new File(plugin.getDataFolder(), name);
-            plugin.getDataFolder().mkdir();
-            Files.write(file.toPath(), gson.toJson(config).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            Files.delete(filePath);
+            Files.write(filePath, gson.toJson(config).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         } catch (IOException e) {
             e.printStackTrace();
         }
