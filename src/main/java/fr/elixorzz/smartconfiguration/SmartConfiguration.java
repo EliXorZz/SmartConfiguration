@@ -7,6 +7,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.logging.Level;
 
@@ -16,7 +17,7 @@ import java.util.logging.Level;
  */
 
 public abstract class SmartConfiguration<T> {
-    private final transient static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private final transient static Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private transient static Plugin plugin;
 
     private transient String name;
@@ -51,13 +52,13 @@ public abstract class SmartConfiguration<T> {
                 T config = configClass.newInstance();
 
                 Files.createFile(filePath);
-                Files.write(filePath, gson.toJson(config).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+                Files.write(filePath, gson.toJson(config).getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
                 plugin.getLogger().log(Level.INFO, "[SmartConfiguration] " + name + " was created.");
             }
 
             if (filePath.toFile().length() == 0) {
                 T config = configClass.newInstance();
-                Files.write(filePath, gson.toJson(config).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+                Files.write(filePath, gson.toJson(config).getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
             }
 
             try(FileReader reader = new FileReader(filePath.toFile())) {
@@ -75,7 +76,7 @@ public abstract class SmartConfiguration<T> {
     protected void update(T config) {
         try {
             Files.delete(filePath);
-            Files.write(filePath, gson.toJson(config).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            Files.write(filePath, gson.toJson(config).getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         } catch (IOException e) {
             e.printStackTrace();
         }
